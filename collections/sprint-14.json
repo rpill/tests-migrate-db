@@ -1,0 +1,507 @@
+{
+	"info": {
+		"_postman_id": "4e395ff9-41a9-438e-a32f-43fe1c71dabe",
+		"name": "back-to-the-film-14",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16979177",
+		"_collection_link": "https://www.postman.com/y-prakticum/workspace/github-newman-cases/collection/16979177-4e395ff9-41a9-438e-a32f-43fe1c71dabe?action=share&source=collection_link&creator=16979177"
+	},
+	"item": [
+		{
+			"name": "films",
+			"item": [
+				{
+					"name": "[+] [GET] Получение списка фильмов",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const scheme = {",
+									"  \"type\": \"object\",",
+									"  \"properties\": {",
+									"    \"total\": {",
+									"        \"type\": \"integer\"",
+									"    },",
+									"    \"items\": {",
+									"        \"type\": \"array\",",
+									"        \"items\": [{",
+									"            \"type\": \"object\",",
+									"            \"properties\": {",
+									"                \"id\": {",
+									"                    \"type\": \"string\"",
+									"                },",
+									"                \"description\": {",
+									"                    \"type\": \"string\"",
+									"                },",
+									"                \"director\": {",
+									"                    \"type\": \"string\"",
+									"                },",
+									"                \"rating\": {",
+									"                    \"type\": \"number\"",
+									"                },",
+									"                \"tags\": {",
+									"                    \"type\": \"array\",",
+									"                    \"items\": [{",
+									"                        \"type\": \"string\"",
+									"                    }]",
+									"                },",
+									"                \"image\": {",
+									"                    \"type\": \"string\"",
+									"                },",
+									"                \"title\": {",
+									"                    \"type\": \"string\"",
+									"                },",
+									"                \"about\": {",
+									"                    \"type\": \"string\"",
+									"                },",
+									"                \"schedule\": {",
+									"                    \"type\": \"array\",",
+									"                    \"items\": [{",
+									"                        \"type\": \"object\",",
+									"                        \"properties\": {",
+									"                            \"id\": {",
+									"                                \"type\": \"string\"",
+									"                            },",
+									"                            \"price\": {",
+									"                                \"type\": \"number\"",
+									"                            },",
+									"                        },",
+									"                        \"required\": [",
+									"                            \"id\",",
+									"                            \"price\"",
+									"                        ]",
+									"                    }]",
+									"                },",
+									"            },",
+									"            \"required\": [",
+									"                \"id\",",
+									"                \"description\",",
+									"                \"director\",",
+									"                \"rating\",",
+									"                \"tags\",",
+									"                \"image\",",
+									"                \"title\",",
+									"                \"about\",",
+									"                \"schedule\",",
+									"            ]",
+									"        }]",
+									"    }",
+									"  },",
+									"  \"required\": [",
+									"    \"items\",",
+									"    \"total\"",
+									"  ]",
+									"}",
+									"",
+									"pm.test(\"Код ответа равен 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"В ответе приходит JSON-объект\", () => {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"});",
+									"",
+									"pm.test(\"Список фильмов\", () => {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.items).to.be.an(\"array\");;",
+									"});",
+									"",
+									"pm.test(\"В total количество фильмов равно количеству элементов в массиве items\", () => {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.items.length).to.eql(response.total);",
+									"});",
+									"",
+									"pm.test(\"Каждый фильм снабжён идентификатором, а также другими полями с информацией о фильме\", () => {",
+									"    const response = pm.response.json();",
+									"    pm.response.to.have.jsonSchema(scheme);",
+									"",
+									"    const film = response.items[0];",
+									"    const session = film.schedule[0];",
+									"    pm.collectionVariables.set(\"film_id\", film.id);",
+									"    pm.collectionVariables.set(\"film_image\", film.image);",
+									"    pm.collectionVariables.set(\"session_id\", session.id);",
+									"    pm.collectionVariables.set(\"session_daytime\", session.daytime);",
+									"    pm.collectionVariables.set(\"session_price\", session.price);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseApiUrl}}/films/",
+							"host": [
+								"{{baseApiUrl}}"
+							],
+							"path": [
+								"films",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[+] [GET] Получение информации об одном фильме",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const scheme = {",
+									"  \"type\": \"object\",",
+									"  \"properties\": {",
+									"    \"total\": {",
+									"        \"type\": \"integer\"",
+									"    },",
+									"    \"items\": {",
+									"        \"type\": \"array\",",
+									"        \"items\": [{",
+									"            \"type\": \"object\",",
+									"            \"properties\": {",
+									"                \"id\": {",
+									"                    \"type\": \"string\"",
+									"                },",
+									"                \"daytime\": {",
+									"                    \"type\": \"string\"",
+									"                },",
+									"                \"hall\": {",
+									"                    \"type\": \"integer\"",
+									"                },",
+									"                \"rows\": {",
+									"                    \"type\": \"integer\"",
+									"                },",
+									"                \"seats\": {",
+									"                    \"type\": \"integer\"",
+									"                },",
+									"                \"price\": {",
+									"                    \"type\": \"number\"",
+									"                },",
+									"                \"taken\": {",
+									"                    \"type\": \"array\",",
+									"                    \"items\": [{",
+									"                        \"type\": \"string\"",
+									"                    }]",
+									"                }",
+									"            },",
+									"            \"required\": [",
+									"                \"id\",",
+									"                \"daytime\",",
+									"                \"hall\",",
+									"                \"rows\",",
+									"                \"seats\",",
+									"                \"price\",",
+									"                \"taken\",",
+									"            ]",
+									"        }]",
+									"    }",
+									"  },",
+									"  \"required\": [",
+									"    \"items\",",
+									"    \"total\"",
+									"  ]",
+									"}",
+									"",
+									"pm.test(\"Код ответа равен 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"В ответе приходит JSON-объект\", () => {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"});",
+									"",
+									"pm.test(\"Список сеансов\", () => {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.items).to.be.an(\"array\");;",
+									"});",
+									"",
+									"pm.test(\"В total количество сеансов равно количеству элементов в массиве items\", () => {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.items.length).to.eql(response.total);",
+									"});",
+									"",
+									"pm.test(\"Фильм снабжён идентификатором и списком сеансов, а также другими полями с информацией о фильме \", () => {",
+									"    pm.response.to.have.jsonSchema(scheme);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseApiUrl}}/films/:id/schedule/",
+							"host": [
+								"{{baseApiUrl}}"
+							],
+							"path": [
+								"films",
+								":id",
+								"schedule",
+								""
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{film_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "[+] [POST] Бронирование билета",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const scheme = {",
+									"  \"type\": \"object\",",
+									"  \"properties\": {",
+									"    \"total\": {",
+									"        \"type\": \"integer\"",
+									"    },",
+									"    \"items\": {",
+									"        \"type\": \"array\",",
+									"        \"items\": [{",
+									"            \"type\": \"object\",",
+									"            \"properties\": {",
+									"                \"film\": {",
+									"                    \"type\": \"string\"",
+									"                },",
+									"                \"session\": {",
+									"                    \"type\": \"string\"",
+									"                },",
+									"                \"daytime\": {",
+									"                    \"type\": \"string\"",
+									"                },",
+									"                \"row\": {",
+									"                    \"type\": \"integer\"",
+									"                },",
+									"                \"seat\": {",
+									"                    \"type\": \"integer\"",
+									"                },",
+									"                \"price\": {",
+									"                    \"type\": \"number\"",
+									"                }",
+									"            },",
+									"            \"required\": [",
+									"                \"film\",",
+									"                \"session\",",
+									"                \"daytime\",",
+									"                \"row\",",
+									"                \"seat\",",
+									"                \"price\",",
+									"            ]",
+									"        }]",
+									"    }",
+									"  },",
+									"  \"required\": [",
+									"    \"items\",",
+									"  ]",
+									"}",
+									"",
+									"pm.test(\"Код ответа равен 200 или 201\", () => {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									"",
+									"pm.test(\"В ответе приходит JSON-объект\", () => {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"});",
+									"",
+									"pm.test(\"Список билетов\", () => {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.items).to.be.an(\"array\");;",
+									"});",
+									"",
+									"pm.test(\"В total количество билетов равно количеству элементов в массиве items\", () => {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.items.length).to.eql(response.total);",
+									"});",
+									"",
+									"pm.test(\"Данные о создании заказов (одного и более) содержат идентификатор фильма, идентификатор сеанса и координаты кресла\", () => {",
+									"    pm.response.to.have.jsonSchema(scheme);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{$randomEmail}}\",\n    \"phone\": \"+7 (999) 999-99-99\",\n    \"tickets\": [{\n        \"film\": \"{{film_id}}\",\n        \"session\": \"{{session_id}}\",\n        \"daytime\": \"{{session_daytime}}\",\n        \"row\": 1,\n        \"seat\": 1,\n        \"price\": {{session_price}}\n    }]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseApiUrl}}/order/",
+							"host": [
+								"{{baseApiUrl}}"
+							],
+							"path": [
+								"order",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "static",
+			"item": [
+				{
+					"name": "[+] [GET] Запрос к статическому контенту",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код ответа равен 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"В ответе приходит изображение\", () => {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('image/jpeg');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/content/afisha/:image",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"content",
+								"afisha",
+								":image"
+							],
+							"variable": [
+								{
+									"key": "image",
+									"value": "{{film_image}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"const schemaMessageOnly = {",
+					"    \"type\": \"object\",",
+					"    \"properties\": {",
+					"        \"message\": {",
+					"            \"type\": \"string\",",
+					"            \"minLength\": 1",
+					"        }",
+					"    },",
+					"    \"required\": [\"message\"]",
+					"};",
+					"",
+					"pm.collectionVariables.set(\"schema_message_only\", JSON.stringify(schemaMessageOnly));",
+					"",
+					"utils = {",
+					"    getData: (jsonData) => {",
+					"        if(Array.isArray(jsonData)) {",
+					"            return jsonData;",
+					"        }",
+					"",
+					"        const keys = Object.keys(jsonData);",
+					"        const firstKey = keys[0];",
+					"        const firstKeyValue = jsonData[firstKey];",
+					"",
+					"        return keys.length === 1 && typeof firstKeyValue === 'object' ? firstKeyValue : jsonData;",
+					"    }",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseApiUrl",
+			"value": "http://localhost:3000/api/afisha",
+			"type": "string"
+		},
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "schema_message_only",
+			"value": "{\"type\":\"object\",\"properties\":{\"message\":{\"type\":\"string\",\"minLength\":1}},\"required\":[\"message\"]}"
+		},
+		{
+			"key": "film_id",
+			"value": ""
+		},
+		{
+			"key": "session_id",
+			"value": ""
+		},
+		{
+			"key": "session_price",
+			"value": ""
+		},
+		{
+			"key": "session_daytime",
+			"value": ""
+		},
+		{
+			"key": "film_image",
+			"value": ""
+		}
+	]
+}
